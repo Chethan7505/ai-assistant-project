@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant - Enhanced</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">🤖 AI Assistant</div>
+                <p class="author">by Chethan Chirag M</p>
+                <button class="new-chat" onclick="clearChat()">+ New Chat</button>
+            </div>
+            <div class="sidebar-menu">
+                <button class="menu-item active" data-tab="questions">Ask Anything</button>
+                <button class="menu-item" data-tab="summarize">Summarize</button>
+                <button class="menu-item" data-tab="creative">Create</button>
+                <button class="menu-item" data-tab="advice">Get Advice</button>
+                <button class="menu-item" data-tab="guide">Guide</button>
+            </div>
+        </aside>
+
+        <main class="chat-container">
+            <header class="chat-header">
+                <h1 id="chat-title">Ask Anything</h1>
+                <p id="chat-desc">Get accurate answers to any question</p>
+            </header>
+
+            <div class="messages" id="messages">
+                <div class="message assistant-msg welcome">
+                    <div class="message-content">
+                        <h2>Welcome to AI Assistant</h2>
+                        <p>Powered by Advanced AI Models</p>
+                        <p style="font-size: 13px; color: #9ca3af; margin-top: 8px;">Ask questions, summarize text, create content, or get advice.</p>
+                        <div class="quick-prompts">
+                            <button class="prompt-btn" onclick="askQuestion('What are essential programming skills for a tech career?')">Tech Career</button>
+                            <button class="prompt-btn" onclick="askQuestion('How do neural networks work?')">Neural Networks</button>
+                            <button class="prompt-btn" onclick="askQuestion('Explain machine learning in simple terms')">Machine Learning</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-area">
+                <!-- Ask Anything -->
+                <div id="questions" class="input-panel active">
+                    <div class="input-wrapper">
+                        <textarea id="questionInput" placeholder="Ask me anything..." rows="1"></textarea>
+                        <button class="send-btn" id="questionBtn" onclick="askQuestion()">→</button>
+                    </div>
+                </div>
+
+                <!-- Summarize -->
+                <div id="summarize" class="input-panel">
+                    <div class="input-wrapper">
+                        <textarea id="textInput" placeholder="Paste text to summarize..." rows="3"></textarea>
+                        <button class="send-btn" id="summarizeBtn" onclick="summarizeText()">Summarize</button>
+                    </div>
+                </div>
+
+                <!-- Creative -->
+                <div id="creative" class="input-panel">
+                    <div class="input-wrapper">
+                        <select id="contentType" class="content-select">
+                            <option value="story">📖 Story</option>
+                            <option value="poem">🎭 Poem</option>
+                            <option value="essay">📚 Essay</option>
+                        </select>
+                        <textarea id="creativePrompt" placeholder="Describe what to create..." rows="2"></textarea>
+                        <button class="send-btn" id="creativeBtn" onclick="generateCreative()">Generate</button>
+                    </div>
+                </div>
+
+                <!-- Advice -->
+                <div id="advice" class="input-panel">
+                    <div class="input-wrapper">
+                        <textarea id="adviceTopic" placeholder="What do you need advice on?" rows="2"></textarea>
+                        <button class="send-btn" id="adviceBtn" onclick="getAdvice()">Get Advice</button>
+                    </div>
+                </div>
+
+                <!-- Guide -->
+                <div id="guide" class="input-panel">
+                    <div class="guide-content">
+                        <div class="guide-header">
+                            <h2>📖 User Guide & Instructions</h2>
+                            <p class="guide-subtitle">Learn how to use each feature effectively</p>
+                        </div>
+
+                        <div class="guide-grid">
+                            <!-- Ask Anything Card -->
+                            <div class="guide-card">
+                                <div class="card-header">
+                                    <h3>❓ Ask Anything</h3>
+                                </div>
+                                <div class="card-body">
+                                    <p>Ask any question about AI, programming, technology, careers, or any topic. Get intelligent, accurate answers instantly.</p>
+                                    <div class="examples">
+                                        <strong>Examples:</strong>
+                                        <ul>
+                                            <li>What is machine learning?</li>
+                                            <li>How do I learn Python?</li>
+                                            <li>Career options in AI?</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Summarize Card -->
+                            <div class="guide-card">
+                                <div class="card-header">
+                                    <h3>📄 Summarize Text</h3>
+                                </div>
+                                <div class="card-body">
+                                    <p>Paste any article, document, or long text to get a concise, accurate summary with key points extracted.</p>
+                                    <div class="examples">
+                                        <strong>Use for:</strong>
+                                        <ul>
+                                            <li>News articles</li>
+                                            <li>Research papers</li>
+                                            <li>Long documents</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Create Card -->
+                            <div class="guide-card">
+                                <div class="card-header">
+                                    <h3>✏️ Create Content</h3>
+                                </div>
+                                <div class="card-body">
+                                    <p>Generate creative writing in 3 formats: Stories (narrative fiction), Poems (poetic compositions), Essays (informative writing).</p>
+                                    <div class="examples">
+                                        <strong>Try:</strong>
+                                        <ul>
+                                            <li>📖 Story: robot learning emotions</li>
+                                            <li>🎭 Poem: moonlight over ocean</li>
+                                            <li>📚 Essay: future of AI</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Advice Card -->
+                            <div class="guide-card">
+                                <div class="card-header">
+                                    <h3>💡 Get Advice</h3>
+                                </div>
+                                <div class="card-body">
+                                    <p>Get professional tips and recommendations on various topics to improve productivity, learning, and success.</p>
+                                    <div class="examples">
+                                        <strong>Topics:</strong>
+                                        <ul>
+                                            <li>Studying & exams</li>
+                                            <li>Coding & programming</li>
+                                            <li>Career development</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Features Section -->
+                        <div class="features-section">
+                            <h3>⭐ Key Features</h3>
+                            <div class="features-list">
+                                <div class="feature-item">
+                                    <span class="feature-icon">🎯</span>
+                                    <div>
+                                        <strong>Accurate AI Responses</strong>
+                                        <p>3-tier system for best answers</p>
+                                    </div>
+                                </div>
+                                <div class="feature-item">
+                                    <span class="feature-icon">⚡</span>
+                                    <div>
+                                        <strong>Fast Processing</strong>
+                                        <p>Instant responses</p>
+                                    </div>
+                                </div>
+                                <div class="feature-item">
+                                    <span class="feature-icon">💾</span>
+                                    <div>
+                                        <strong>Save Feedback</strong>
+                                        <p>Rate responses via menu</p>
+                                    </div>
+                                </div>
+                                <div class="feature-item">
+                                    <span class="feature-icon">📱</span>
+                                    <div>
+                                        <strong>Mobile Ready</strong>
+                                        <p>Works on all devices</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Keyboard Shortcuts -->
+                        <div class="shortcuts-section">
+                            <h3>⌨️ Keyboard Shortcuts</h3>
+                            <div class="shortcuts-grid">
+                                <div class="shortcut">
+                                    <kbd>Enter</kbd>
+                                    <span>Send message</span>
+                                </div>
+                                <div class="shortcut">
+                                    <kbd>Shift+Enter</kbd>
+                                    <span>New line</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project Info -->
+                        <div class="project-info">
+                            <h3>🎓 Project Information</h3>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <strong>Developer:</strong>
+                                    <p>Chethan Chirag M</p>
+                                </div>
+                                <div class="info-item">
+                                    <strong>Tech Stack:</strong>
+                                    <p>Flask, Python, Transformers, SQLite</p>
+                                </div>
+                                <div class="info-item">
+                                    <strong>Features:</strong>
+                                    <p>✓ Smart answers ✓ Feedback ✓ Content generation</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="loading-spinner hidden">
+        <div class="spinner-content">
+            <div class="animated-loader">
+                <div class="loader-dot"></div>
+                <div class="loader-dot"></div>
+                <div class="loader-dot"></div>
+            </div>
+            <p id="loadingText">Thinking...</p>
+        </div>
+    </div>
+
+    <!-- Feedback Menu (appears below last message) -->
+    <div id="feedbackMenu" class="feedback-menu hidden">
+        <div class="feedback-content">
+            <p class="feedback-label">Was this helpful?</p>
+            <div class="feedback-buttons">
+                <button class="feedback-btn yes" onclick="submitFeedback('yes')">👍 Yes</button>
+                <button class="feedback-btn no" onclick="submitFeedback('no')">👎 No</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
